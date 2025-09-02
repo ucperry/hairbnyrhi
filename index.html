@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hair By Rhiannon - Professional Hair Styling | North Canton, OH</title>
+    
+    <!-- SEO Meta Tags - CUSTOMIZE THESE -->
+    <meta name="description" content="Professional hair styling, cuts, and color services in North Canton, OH. Over 20 years of experience creating personalized looks for every client.">
+    <meta name="keywords" content="hair salon, hair stylist, hair color, haircuts, North Canton, Ohio, balayage, highlights">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Page-specific styles -->
+    <style>
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            color: var(--text-medium);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .about-stats {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--primary-gold);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .about-image {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px var(--shadow);
+            /* PLACEHOLDER - REPLACE WITH YOUR PHOTO */
+            background: linear-gradient(135deg, var(--accent-rose), var(--primary-gold));
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .portfolio-item {
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 1;
+            background: var(--primary-light);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .portfolio-item:hover {
+            transform: scale(1.05);
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(44, 44, 44, 0.8), rgba(212, 175, 55, 0.8));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .services-preview {
+            padding: 6rem 0;
+            background: var(--white);
+        }
+
+        .about-preview {
+            padding: 6rem 0;
+            background: var(--primary-light);
+        }
+
+        .portfolio-preview {
+            padding: 6rem 0;
+            background: var(--white);
+        }
+
+        .cta-section {
+            padding: 6rem 0;
+            background: var(--primary-dark);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .cta-content h2 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- LOGO - CUSTOMIZE THIS SECTION -->
+            <a href="index.html" class="logo">
+                <i class="fas fa-cut logo-icon"></i>
+                Hair By Rhiannon
+            </a>
+
+            <!-- NAVIGATION MENU -->
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link active">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="portfolio.html" class="nav-link">Portfolio</a></li>
+                <li><a href="policies.html" class="nav-link">Policies</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="consultation.html" class="nav-book-btn">Book Consultation</a></li>
+            </ul>
+
+            <!-- MOBILE MENU TOGGLE -->
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <!-- CUSTOMIZE ALL TEXT CONTENT BELOW -->
+            <p class="hero-subtitle">Professional Hair Styling</p>
+            <h1 class="hero-title">Transform Your Look</h1>
+            <p class="hero-description">
+                Over 20 years of experience creating personalized styles that reflect your unique personality and lifestyle.
+            </p>
+            <div class="hero-buttons">
+                <a href="consultation.html" class="btn-primary">
+                    <i class="fas fa-calendar-alt"></i>
+                    Book Consultation
+                </a>
+                <a href="portfolio.html" class="btn-secondary">View Portfolio</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES PREVIEW SECTION -->
+    <section class="services-preview">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle">What I Offer</p>
+                <h2 class="section-title">Professional Services</h2>
+                <p class="section-description">
+                    Specialized in cuts, color, and styling with personalized attention to every detail.
+                </p>
+            </div>
+
+            <div class="services-grid">
+                <!-- SERVICE CARD 1 - CUSTOMIZE CONTENT -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-cut"></i>
+                    </div>
+                    <h3 class="service-title">Cuts & Styling</h3>
+                    <p class="service-description">
+                        Precision cuts tailored to your face shape and lifestyle, with professional styling techniques.
+                    </p>
+                    <p class="service-price">Starting at $50</p>
+                </div>
+
+                <!-- SERVICE CARD 2 - CUSTOMIZE CONTENT -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3 class="service-title">Color & Highlights</h3>
+                    <p class="service-description">
+                        Expert color services including balayage, highlights, and custom color formulations.
+                    </p>
+                    <p class="service-price">Starting at $70</p>
+                </div>
+
+                <!-- SERVICE CARD 3 - CUSTOMIZE CONTENT -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-sparkles"></i>
+                    </div>
+                    <h3 class="service-title">Treatments</h3>
+                    <p class="service-description">
+                        Restorative treatments including Olaplex, K18, and keratin services for healthy hair.
+                    </p>
+                    <p class="service-price">Starting at $25</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT PREVIEW SECTION -->
+    <section class="about-preview">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <!-- CUSTOMIZE ALL TEXT CONTENT -->
+                    <h2>Meet Rhiannon</h2>
+                    <p>
+                        For over 20 years, I've had the privilege of transforming hair into a true expression of individuality. But for me, styling is about more than just technique—it's about connection.
+                    </p>
+                    <p>
+                        Located at Salon Maverick in North Canton, I provide a space where creativity and personalization thrive, creating looks that reflect your unique essence.
+                    </p>
+
+                    <!-- STATISTICS - CUSTOMIZE NUMBERS -->
+                    <div class="about-stats">
+                        <div class="stat">
+                            <span class="stat-number">20+</span>
+                            <span class="stat-label">Years Experience</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">1000+</span>
+                            <span class="stat-label">Happy Clients</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">5000+</span>
+                            <span class="stat-label">Services Completed</span>
+                        </div>
+                    </div>
+
+                    <a href="about.html" class="btn-primary">Learn More About Me</a>
+                </div>
+
+                <!-- PHOTO PLACEHOLDER - REPLACE WITH YOUR PHOTO -->
+                <div class="about-image">
+                    <p>Your Professional Photo Here<br>Replace this placeholder</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO PREVIEW SECTION -->
+    <section class="portfolio-preview">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle">My Work</p>
+                <h2 class="section-title">Recent Transformations</h2>
+                <p class="section-description">
+                    Browse my latest work and get inspired for your next transformation.
+                </p>
+            </div>
+
+            <div class="portfolio-grid">
+                <!-- PORTFOLIO ITEMS - REPLACE WITH YOUR ACTUAL PHOTOS -->
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">
+                        <p>Color Transformation</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">
+                        <p>Balayage Highlights</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">
+                        <p>Precision Cut</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">
+                        <p>Special Event Style</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION SECTION -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <!-- CUSTOMIZE TEXT CONTENT -->
+                <h2>Ready for Your Transformation?</h2>
+                <p>
+                    Let's create a look that's uniquely you. Book your consultation today and let's discuss your vision.
+                </p>
+                <a href="consultation.html" class="btn-primary">
+                    <i class="fas fa-calendar-alt"></i>
+                    Book Your Consultation
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- BUSINESS INFO - CUSTOMIZE ALL CONTENT -->
+                <div class="footer-section">
+                    <h3>About Rhiannon</h3>
+                    <p>Learn about the passion that has fueled my journey for all things hair & beauty for over 20 years, and what I can offer to you for that look & style that you've been wanting!</p>
+                    <div class="social-links">
+                        <!-- ADD YOUR SOCIAL MEDIA LINKS -->
+                        <a href="https://www.instagram.com/hairbyrhiannon82/" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- QUICK LINKS -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="services.html">Services & Pricing</a></li>
+                        <li><a href="portfolio.html">Portfolio</a></li>
+                        <li><a href="policies.html">Policies</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- RECENT BLOG -->
+                <div class="footer-section">
+                    <h3>Recent Blog</h3>
+                </div>
+
+                <!-- CONTACT INFO - CUSTOMIZE WITH YOUR DETAILS -->
+                <div class="footer-section">
+                    <h3>Have Questions?</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 611 N Main St, North Canton, OH 44720</p>
+                    <p><i class="fas fa-phone"></i> +1 330 309 3788</p>
+                    <p><i class="fas fa-envelope"></i> Rhiannon@hairbyrhi.com</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Hair By Rhiannon. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+</body>
+</html>

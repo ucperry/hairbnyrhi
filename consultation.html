@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Consultation - Hair By Rhiannon | North Canton, OH</title>
+    
+    <meta name="description" content="Request a consultation with Hair By Rhiannon. Professional hair services in North Canton, OH. Book your appointment request today.">
+    <meta name="keywords" content="hair consultation, book appointment, hair salon North Canton, hair stylist booking">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Page-specific styles -->
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px var(--shadow);
+        }
+        
+        .form-section-title {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-gold);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-row.two-column {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .checkbox-input {
+            margin-top: 0.25rem;
+            transform: scale(1.2);
+            accent-color: var(--primary-gold);
+        }
+
+        .checkbox-label {
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .checkbox-item.required {
+            padding: 1rem;
+            background: rgba(220, 53, 69, 0.05);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+            border-radius: 8px;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .service-option {
+            position: relative;
+        }
+
+        .service-option input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .service-card {
+            background: var(--primary-light);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .service-option input[type="checkbox"]:checked + .service-card {
+            background: var(--primary-gold);
+            color: var(--white);
+            border-color: var(--primary-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .service-card i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .service-card h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .service-card .price {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .submit-section {
+            margin-top: 3rem;
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 2px solid var(--primary-light);
+        }
+
+        .success-message {
+            display: none;
+            background: var(--success-green);
+            color: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-row.two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cut logo-icon"></i>
+                Hair By Rhiannon
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="portfolio.html" class="nav-link">Portfolio</a></li>
+                <li><a href="policies.html" class="nav-link">Policies</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="consultation.html" class="nav-link active">Book Consultation</a></li>
+            </ul>
+
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <section style="background: linear-gradient(135deg, var(--success-green), var(--primary-gold)); color: var(--white); padding: 4rem 0; text-align: center;">
+        <div class="container">
+            <h1 class="page-title">Book Your Consultation</h1>
+            <p class="page-subtitle">
+                Start your transformation with a personalized consultation. I'll review your request and confirm your appointment within 24 hours.
+            </p>
+        </div>
+    </section>
+
+    <!-- PROCESS STEPS -->
+    <section style="padding: 4rem 0; background: var(--white);">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                <div style="text-align: center;">
+                    <div style="width: 60px; height: 60px; background: var(--primary-gold); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 600; margin: 0 auto 1rem;">1</div>
+                    <h3 style="font-family: var(--font-heading); font-size: 1.3rem; font-weight: 600; margin-bottom: 0.5rem;">Submit Request</h3>
+                    <p style="color: var(--text-medium); line-height: 1.6;">Fill out the consultation form with your contact information and service interests.</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="width: 60px; height: 60px; background: var(--primary-gold); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 600; margin: 0 auto 1rem;">2</div>
+                    <h3 style="font-family: var(--font-heading); font-size: 1.3rem; font-weight: 600; margin-bottom: 0.5rem;">Review & Contact</h3>
+                    <p style="color: var(--text-medium); line-height: 1.6;">I'll review your request and contact you within 24 hours to discuss your needs.</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="width: 60px; height: 60px; background: var(--primary-gold); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 600; margin: 0 auto 1rem;">3</div>
+                    <h3 style="font-family: var(--font-heading); font-size: 1.3rem; font-weight: 600; margin-bottom: 0.5rem;">Confirm Appointment</h3>
+                    <p style="color: var(--text-medium); line-height: 1.6;">Once we've discussed your vision, I'll confirm your appointment time and send details.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORM SECTION -->
+    <section style="padding: 4rem 0; background: var(--primary-light);">
+        <div class="container">
+            <div class="form-container">
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <h2 style="font-family: var(--font-heading); font-size: 2.5rem; color: var(--primary-dark); margin-bottom: 1rem;">Consultation Request Form</h2>
+                    <p style="color: var(--text-medium); font-size: 1.1rem;">Please provide your information and service interests. This is a request - not a confirmed appointment.</p>
+                </div>
+
+                <div class="notice info" style="margin-bottom: 2rem;">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>This is a consultation request, not a confirmed booking.</strong> I'll contact you within 24 hours to discuss your needs and confirm availability.
+                </div>
+
+                <!-- CONSULTATION FORM -->
+                <form id="consultationForm" action="process-consultation.php" method="POST" style="display: grid; gap: 2rem;">
+                    
+                    <!-- PERSONAL INFORMATION SECTION -->
+                    <div>
+                        <h3 class="form-section-title">
+                            <i class="fas fa-user"></i>
+                            Personal Information
+                        </h3>
+                        
+                        <div class="form-row two-column">
+                            <div class="form-group">
+                                <label class="form-label" for="firstName">
+                                    First Name <span class="required">*</span>
+                                </label>
+                                <input type="text" id="firstName" name="firstName" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="lastName">
+                                    Last Name <span class="required">*</span>
+                                </label>
+                                <input type="text" id="lastName" name="lastName" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row two-column">
+                            <div class="form-group">
+                                <label class="form-label" for="email">
+                                    Email Address <span class="required">*</span>
+                                </label>
+                                <input type="email" id="email" name="email" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="phone">
+                                    Phone Number <span class="required">*</span>
+                                </label>
+                                <input type="tel" id="phone" name="phone" class="form-input" required>
+                                <div class="form-helper">Preferred contact method for appointment confirmation</div>
+                            </div>
+                        </div>
+
+                        <div class="form-row two-column">
+                            <div class="form-group">
+                                <label class="form-label" for="age">
+                                    Age Range
+                                </label>
+                                <select id="age" name="age" class="form-select">
+                                    <option value="">Select age range</option>
+                                    <option value="under-18">Under 18</option>
+                                    <option value="18-25">18-25</option>
+                                    <option value="26-35">26-35</option>
+                                    <option value="36-45">36-45</option>
+                                    <option value="46-55">46-55</option>
+                                    <option value="56-65">56-65</option>
+                                    <option value="over-65">Over 65</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="clientType">
+                                    Client Type <span class="required">*</span>
+                                </label>
+                                <select id="clientType" name="clientType" class="form-select" required>
+                                    <option value="">Select client type</option>
+                                    <option value="new">New Client (never been here)</option>
+                                    <option value="returning">Returning Client</option>
+                                    <option value="referral">Referred by existing client</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SERVICE INTERESTS SECTION -->
+                    <div>
+                        <h3 class="form-section-title">
+                            <i class="fas fa-cut"></i>
+                            Services of Interest
+                        </h3>
+                        
+                        <div class="service-grid">
+                            <div class="service-option">
+                                <input type="checkbox" id="service-cut" name="services[]" value="cut">
+                                <label for="service-cut" class="service-card">
+                                    <i class="fas fa-cut"></i>
+                                    <h4>Haircut</h4>
+                                    <div class="price">Starting $25</div>
+                                </label>
+                            </div>
+                            
+                            <div class="service-option">
+                                <input type="checkbox" id="service-color" name="services[]" value="color">
+                                <label for="service-color" class="service-card">
+                                    <i class="fas fa-palette"></i>
+                                    <h4>Color</h4>
+                                    <div class="price">Starting $45</div>
+                                </label>
+                            </div>
+                            
+                            <div class="service-option">
+                                <input type="checkbox" id="service-highlights" name="services[]" value="highlights">
+                                <label for="service-highlights" class="service-card">
+                                    <i class="fas fa-sun"></i>
+                                    <h4>Highlights</h4>
+                                    <div class="price">Starting $90</div>
+                                </label>
+                            </div>
+                            
+                            <div class="service-option">
+                                <input type="checkbox" id="service-balayage" name="services[]" value="balayage">
+                                <label for="service-balayage" class="service-card">
+                                    <i class="fas fa-magic"></i>
+                                    <h4>Balayage</h4>
+                                    <div class="price">Starting $125</div>
+                                </label>
+                            </div>
+                            
+                            <div class="service-option">
+                                <input type="checkbox" id="service-treatment" name="services[]" value="treatment">
+                                <label for="service-treatment" class="service-card">
+                                    <i class="fas fa-heart"></i>
+                                    <h4>Treatment</h4>
+                                    <div class="price">Starting $25</div>
+                                </label>
+                            </div>
+                            
+                            <div class="service-option">
+                                <input type="checkbox" id="service-styling" name="services[]" value="styling">
+                                <label for="service-styling" class="service-card">
+                                    <i class="fas fa-sparkles"></i>
+                                    <h4>Styling</h4>
+                                    <div class="price">Starting $20</div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- APPOINTMENT PREFERENCES SECTION -->
+                    <div>
+                        <h3 class="form-section-title">
+                            <i class="fas fa-calendar"></i>
+                            Appointment Preferences
+                        </h3>
+                        
+                        <div class="form-row two-column">
+                            <div class="form-group">
+                                <label class="form-label" for="preferredDate">
+                                    Preferred Date <span class="required">*</span>
+                                </label>
+                                <input type="date" id="preferredDate" name="preferredDate" class="form-input" required>
+                                <div class="form-helper">This is your preferred date - actual appointment will be confirmed separately</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="preferredTime">
+                                    Preferred Time <span class="required">*</span>
+                                </label>
+                                <select id="preferredTime" name="preferredTime" class="form-select" required>
+                                    <option value="">Select preferred time</option>
+                                    <option value="morning">Morning (10am-12pm)</option>
+                                    <option value="afternoon">Afternoon (12pm-4pm)</option>
+                                    <option value="evening">Evening (4pm-7pm)</option>
+                                    <option value="flexible">Flexible</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HAIR INFORMATION SECTION -->
+                    <div>
+                        <h3 class="form-section-title">
+                            <i class="fas fa-info-circle"></i>
+                            Hair Information
+                        </h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="desiredLook">
+                                    What look are you hoping to achieve? <span class="required">*</span>
+                                </label>
+                                <textarea id="desiredLook" name="desiredLook" class="form-textarea" rows="4" placeholder="Describe your vision, include any inspiration photos you'd like to bring..." required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="specialRequests">
+                                    Special requests, allergies, or concerns?
+                                </label>
+                                <textarea id="specialRequests" name="specialRequests" class="form-textarea" rows="3" placeholder="Any allergies to hair products, sensitive skin, pregnancy, medications, or specific requests..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- POLICIES AGREEMENT SECTION -->
+                    <div>
+                        <h3 class="form-section-title">
+                            <i class="fas fa-clipboard-check"></i>
+                            Required Agreements
+                        </h3>
+                        
+                        <div class="checkbox-group">
+                            <div class="checkbox-item required">
+                                <input type="checkbox" id="readPolicies" name="agreements[]" value="policies" class="checkbox-input" required>
+                                <label for="readPolicies" class="checkbox-label">
+                                    <strong>I have read and agree to all salon policies</strong> including the 24-hour cancellation policy, payment terms, and service conditions. <a href="policies.html" target="_blank" style="color: var(--primary-gold); text-decoration: underline;">Read full policies here</a>
+                                </label>
+                            </div>
+                            
+                            <div class="checkbox-item required">
+                                <input type="checkbox" id="consultationUnderstanding" name="agreements[]" value="consultation" class="checkbox-input" required>
+                                <label for="consultationUnderstanding" class="checkbox-label">
+                                    <strong>I understand this is a consultation request</strong>, not a confirmed appointment, and that Hair By Rhiannon will contact me within 24 hours to discuss my needs and confirm availability.
+                                </label>
+                            </div>
+                            
+                            <div class="checkbox-item required">
+                                <input type="checkbox" id="accurateInfo" name="agreements[]" value="accurate" class="checkbox-input" required>
+                                <label for="accurateInfo" class="checkbox-label">
+                                    <strong>I confirm that all information provided is accurate</strong> including my hair history, health conditions, and contact information.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUBMIT SECTION -->
+                    <div class="submit-section">
+                        <div class="notice warning" style="margin-bottom: 1.5rem;">
+                            <i class="fas fa-clock"></i>
+                            <strong>Response Time:</strong> I'll review your request and contact you within 24 hours to discuss your needs and confirm appointment availability.
+                        </div>
+                        
+                        <button type="submit" class="btn-submit" id="submitBtn">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit Consultation Request
+                        </button>
+                        
+                        <div class="form-helper" style="margin-top: 1rem; text-align: center;">
+                            Questions? Call (330) 309-3788 or email Rhiannon@hairbyrhi.com
+                        </div>
+                    </div>
+                </form>
+
+                <!-- SUCCESS MESSAGE (Hidden initially) -->
+                <div class="success-message" id="successMessage">
+                    <h3><i class="fas fa-check-circle"></i> Request Submitted Successfully!</h3>
+                    <p>Thank you for your consultation request. I'll review your information and contact you within 24 hours to discuss your needs and confirm appointment availability.</p>
+                    <p><strong>Next Steps:</strong> Watch for a call or email from (330) 309-3788 or Rhiannon@hairbyrhi.com</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Rhiannon</h3>
+                    <p>Professional hair styling services with over 20 years of experience in North Canton, Ohio.</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/hairbyrhiannon82/" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="services.html">Services & Pricing</a></li>
+                        <li><a href="portfolio.html">Portfolio</a></li>
+                        <li><a href="policies.html">Policies</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Recent Blog</h3>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Have Questions?</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 611 N Main St, North Canton, OH 44720</p>
+                    <p><i class="fas fa-phone"></i> +1 330 309 3788</p>
+                    <p><i class="fas fa-envelope"></i> Rhiannon@hairbyrhi.com</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Hair By Rhiannon. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

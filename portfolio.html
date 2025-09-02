@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Hair By Rhiannon | North Canton, OH</title>
+    
+    <!-- SEO Meta Tags - CUSTOMIZE THESE -->
+    <meta name="description" content="View Hair By Rhiannon's portfolio of professional hair styling work. Before and after photos, color transformations, cuts, and styling in North Canton, OH.">
+    <meta name="keywords" content="hair portfolio, before after hair, hair transformation, hair color gallery, hair cuts gallery, North Canton hair stylist">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- ======================
+         NAVIGATION BAR
+         ====================== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- LOGO SECTION - CUSTOMIZE AS NEEDED -->
+            <a href="index.html" class="logo">
+                <i class="fas fa-cut logo-icon"></i>
+                Hair By Rhiannon
+            </a>
+
+            <!-- MAIN NAVIGATION MENU -->
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="portfolio.html" class="nav-link active">Portfolio</a></li>
+                <li><a href="policies.html" class="nav-link">Policies</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="consultation.html" class="nav-book-btn">Book Consultation</a></li>
+            </ul>
+
+            <!-- MOBILE MENU TOGGLE -->
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======================
+         PAGE HEADER SECTION
+         ====================== -->
+    <section class="page-header">
+        <div class="container-wide">
+            <!-- CUSTOMIZE PAGE TITLE AND DESCRIPTION -->
+            <h1 class="page-title">Portfolio</h1>
+            <p class="page-subtitle">
+                Explore transformations, color work, cuts, and styling that showcase over 20 years of professional expertise.
+            </p>
+        </div>
+    </section>
+
+    <!-- ======================
+         INSTAGRAM INTEGRATION NOTICE
+         ====================== -->
+    <section class="notice info">
+        <div class="container">
+            <i class="fab fa-instagram"></i>
+            <!-- CUSTOMIZE INSTAGRAM LINK -->
+            <strong>See more recent work:</strong> Follow 
+            <a href="https://www.instagram.com/hairbyrhiannon82/" target="_blank" style="color: var(--white); text-decoration: underline; font-weight: 600;">@hairbyrhiannon82</a> 
+            on Instagram for the latest transformations and behind-the-scenes content!
+        </div>
+    </section>
+
+    <!-- ======================
+         PORTFOLIO FILTER SECTION
+         ====================== -->
+    <section style="padding: 3rem 0; background: var(--white); border-bottom: 1px solid #e0e0e0; position: sticky; top: 80px; z-index: 500;">
+        <div class="container">
+            <!-- PORTFOLIO FILTER BUTTONS - ADD/REMOVE CATEGORIES AS NEEDED -->
+            <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <button class="filter-btn active" data-filter="all">All Work</button>
+                <button class="filter-btn" data-filter="before-after">Before & After</button>
+                <button class="filter-btn" data-filter="color">Color Work</button>
+                <button class="filter-btn" data-filter="cuts">Cuts & Styles</button>
+                <button class="filter-btn" data-filter="highlights">Highlights</button>
+                <button class="filter-btn" data-filter="balayage">Balayage</button>
+                <button class="filter-btn" data-filter="events">Special Events</button>
+                <button class="filter-btn" data-filter="treatments">Treatments</button>
+                
+                <!-- RESULTS COUNTER -->
+                <div style="margin-left: 2rem; color: var(--text-medium); font-style: italic;">
+                    <span id="resultsCount">0 items</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================
+         PORTFOLIO GALLERY SECTION
+         ====================== -->
+    <section style="padding: 4rem 0; background: var(--primary-light); min-height: 70vh;">
+        <div class="container-wide">
+            <!-- PORTFOLIO GRID - REPLACE PLACEHOLDER ITEMS WITH REAL PHOTOS -->
+            <div class="portfolio-grid" id="portfolioGrid">
+                
+                <!-- ======================
+                     BEFORE/AFTER TRANSFORMATION EXAMPLE
+                     REPLACE WITH ACTUAL BEFORE/AFTER PHOTOS
+                     ====================== -->
+                <div class="gallery-item before-after fade-in" data-category="before-after color">
+                    <!-- BEFORE/AFTER PHOTO CONTAINER -->
+                    <div class="gallery-image" style="height: 250px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px;">
+                        <!-- BEFORE PHOTO PLACEHOLDER - REPLACE WITH ACTUAL PHOTO -->
+                        <div style="background: linear-gradient(135deg, #e0e0e0, var(--primary-light)); display: flex; align-items: center; justify-content: center; color: var(--text-medium); font-size: 0.95rem; position: relative;">
+                            Replace with actual<br>BEFORE photo
+                            <!-- BEFORE LABEL -->
+                            <span style="position: absolute; top: 10px; left: 10px; background: rgba(0, 0, 0, 0.7); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">BEFORE</span>
+                        </div>
+                        <!-- AFTER PHOTO PLACEHOLDER - REPLACE WITH ACTUAL PHOTO -->
+                        <div style="background: linear-gradient(135deg, var(--accent-rose), var(--primary-gold)); display: flex; align-items: center; justify-content: center; color: var(--text-medium); font-size: 0.95rem; position: relative;">
+                            Replace with actual<br>AFTER photo
+                            <!-- AFTER LABEL -->
+                            <span style="position: absolute; top: 10px; right: 10px; background: var(--primary-gold); color: var(--primary-dark); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">AFTER</span>
+                        </div>
+                    </div>
+                    <!-- HOVER OVERLAY -->
+                    <div class="portfolio-overlay">
+                        <span>Click to View Larger</span>
+                    </div>
+                    <!-- PORTFOLIO ITEM DETAILS - CUSTOMIZE CONTENT -->
+                    <div style="padding: 1.5rem;">
+                        <div style="color: var(--primary-gold); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Before & After</div>
+                        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 0.5rem;">Blonde Transformation</h3>
+                        <p style="color: var(--text-medium); font-size: 0.9rem; line-height: 1.5;">Complete color transformation from dark brown to dimensional blonde with balayage highlights.</p>
+                        <!-- SERVICE TAGS - CUSTOMIZE TAGS -->
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Color Correction</span>
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Balayage</span>
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Blonde</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================
+                     COLOR WORK EXAMPLE - SINGLE PHOTO
+                     REPLACE WITH ACTUAL COLOR WORK PHOTO
+                     ====================== -->
+                <div class="gallery-item slide-up" data-category="color highlights">
+                    <!-- PHOTO PLACEHOLDER - REPLACE WITH ACTUAL PHOTO -->
+                    <div style="width: 100%; height: 300px; background: linear-gradient(135deg, var(--primary-light), var(--accent-rose)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--text-medium); font-size: 0.95rem; text-align: center; line-height: 1.4;">
+                        Replace with photo of<br>highlight/color work
+                    </div>
+                    <!-- HOVER OVERLAY -->
+                    <div class="portfolio-overlay">
+                        <span>Click to View Larger</span>
+                    </div>
+                    <!-- PORTFOLIO ITEM DETAILS - CUSTOMIZE CONTENT -->
+                    <div style="padding: 1.5rem;">
+                        <div style="color: var(--primary-gold); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Highlights</div>
+                        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 0.5rem;">Dimensional Highlights</h3>
+                        <p style="color: var(--text-medium); font-size: 0.9rem; line-height: 1.5;">Multi-tonal highlights for natural-looking dimension and movement.</p>
+                        <!-- SERVICE TAGS - CUSTOMIZE TAGS -->
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Foil Highlights</span>
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Dimensional</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================
+                     CUT & STYLE EXAMPLE
+                     REPLACE WITH ACTUAL CUT PHOTO
+                     ====================== -->
+                <div class="gallery-item slide-up" data-category="cuts">
+                    <!-- PHOTO PLACEHOLDER - REPLACE WITH ACTUAL PHOTO -->
+                    <div style="width: 100%; height: 300px; background: linear-gradient(135deg, var(--primary-light), var(--accent-rose)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--text-medium); font-size: 0.95rem; text-align: center; line-height: 1.4;">
+                        Replace with photo of<br>precision cut/style
+                    </div>
+                    <!-- HOVER OVERLAY -->
+                    <div class="portfolio-overlay">
+                        <span>Click to View Larger</span>
+                    </div>
+                    <!-- PORTFOLIO ITEM DETAILS - CUSTOMIZE CONTENT -->
+                    <div style="padding: 1.5rem;">
+                        <div style="color: var(--primary-gold); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Cuts & Styles</div>
+                        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 0.5rem;">Modern Bob Cut</h3>
+                        <p style="color: var(--text-medium); font-size: 0.9rem; line-height: 1.5;">Precision cut bob with subtle layers for movement and style.</p>
+                        <!-- SERVICE TAGS - CUSTOMIZE TAGS -->
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Bob Cut</span>
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Precision</span>
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Modern</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================
+                     BALAYAGE EXAMPLE
+                     REPLACE WITH ACTUAL BALAYAGE PHOTO
+                     ====================== -->
+                <div class="gallery-item slide-up" data-category="balayage color">
+                    <!-- PHOTO PLACEHOLDER - REPLACE WITH ACTUAL PHOTO -->
+                    <div style="width: 100%; height: 300px; background: linear-gradient(135deg, var(--primary-light), var(--accent-rose)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--text-medium); font-size: 0.95rem; text-align: center; line-height: 1.4;">
+                        Replace with photo of<br>balayage work
+                    </div>
+                    <!-- HOVER OVERLAY -->
+                    <div class="portfolio-overlay">
+                        <span>Click to View Larger</span>
+                    </div>
+                    <!-- PORTFOLIO ITEM DETAILS - CUSTOMIZE CONTENT -->
+                    <div style="padding: 1.5rem;">
+                        <div style="color: var(--primary-gold); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Balayage</div>
+                        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 0.5rem;">Sun-Kissed Balayage</h3>
+                        <p style="color: var(--text-medium); font-size: 0.9rem; line-height: 1.5;">Hand-painted balayage for a natural, sun-kissed effect.</p>
+                        <!-- SERVICE TAGS - CUSTOMIZE TAGS -->
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Balayage</span>
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Natural</span>
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Hand-painted</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================
+                     EVENT STYLING EXAMPLE
+                     REPLACE WITH ACTUAL EVENT STYLING PHOTO
+                     ====================== -->
+                <div class="gallery-item slide-up" data-category="events">
+                    <!-- PHOTO PLACEHOLDER - REPLACE WITH ACTUAL PHOTO -->
+                    <div style="width: 100%; height: 300px; background: linear-gradient(135deg, var(--primary-light), var(--accent-rose)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--text-medium); font-size: 0.95rem; text-align: center; line-height: 1.4;">
+                        Replace with photo of<br>special event styling
+                    </div>
+                    <!-- HOVER OVERLAY -->
+                    <div class="portfolio-overlay">
+                        <span>Click to View Larger</span>
+                    </div>
+                    <!-- PORTFOLIO ITEM DETAILS - CUSTOMIZE CONTENT -->
+                    <div style="padding: 1.5rem;">
+                        <div style="color: var(--primary-gold); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Special Events</div>
+                        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 0.5rem;">Wedding Updo</h3>
+                        <p style="color: var(--text-medium); font-size: 0.9rem; line-height: 1.5;">Elegant bridal updo for a special day.</p>
+                        <!-- SERVICE TAGS - CUSTOMIZE TAGS -->
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Bridal</span>
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Updo</span>
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Special Event</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================
+                     TREATMENT RESULT EXAMPLE
+                     REPLACE WITH ACTUAL TREATMENT RESULT PHOTO
+                     ====================== -->
+                <div class="gallery-item slide-up" data-category="treatments color">
+                    <!-- PHOTO PLACEHOLDER - REPLACE WITH ACTUAL PHOTO -->
+                    <div style="width: 100%; height: 300px; background: linear-gradient(135deg, var(--primary-light), var(--accent-rose)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--text-medium); font-size: 0.95rem; text-align: center; line-height: 1.4;">
+                        Replace with photo showing<br>treatment results
+                    </div>
+                    <!-- HOVER OVERLAY -->
+                    <div class="portfolio-overlay">
+                        <span>Click to View Larger</span>
+                    </div>
+                    <!-- PORTFOLIO ITEM DETAILS - CUSTOMIZE CONTENT -->
+                    <div style="padding: 1.5rem;">
+                        <div style="color: var(--primary-gold); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Treatments</div>
+                        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 0.5rem;">Keratin Treatment Result</h3>
+                        <p style="color: var(--text-medium); font-size: 0.9rem; line-height: 1.5;">Smooth, frizz-free results from professional keratin treatment.</p>
+                        <!-- SERVICE TAGS - CUSTOMIZE TAGS -->
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Keratin</span>
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Smoothing</span>
+                            <span style="background: var(--primary-light); color: var(--text-medium); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">Frizz Control</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================
+                     ADD MORE PORTFOLIO ITEMS HERE
+                     COPY THE PATTERN ABOVE FOR ADDITIONAL ITEMS
+                     ====================== -->
+                
+            </div>
+
+            <!-- LOAD MORE BUTTON SECTION -->
+            <div style="text-align: center; margin-top: 3rem;">
+                <button onclick="loadMoreItems()" style="background: var(--primary-gold); color: var(--white); padding: 1rem 2.5rem; border: none; border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-images"></i>
+                    Load More Work
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================
+         LIGHTBOX MODAL (For future image viewing)
+         ====================== -->
+    <div class="lightbox" id="lightbox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 2000; justify-content: center; align-items: center;">
+        <span onclick="closeLightbox()" style="position: absolute; top: 20px; right: 40px; color: var(--white); font-size: 2rem; cursor: pointer; z-index: 2001;">&times;</span>
+        <div style="max-width: 90vw; max-height: 90vh; position: relative;">
+            <img id="lightboxImage" src="" alt="Portfolio Image" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+        </div>
+    </div>
+
+    <!-- ======================
+         CTA SECTION
+         ====================== -->
+    <section style="padding: 4rem 0; background: var(--success-green); color: var(--white); text-align: center;">
+        <div class="container">
+            <div>
+                <!-- CUSTOMIZE CTA TEXT -->
+                <h2 style="font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 1rem;">Love What You See?</h2>
+                <p style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Ready to create your own transformation? Let's discuss your vision and bring it to life with professional expertise and personalized care.
+                </p>
+                <a href="consultation.html" class="btn-primary">
+                    <i class="fas fa-calendar-alt"></i>
+                    Book Your Consultation
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================
+         FOOTER SECTION
+         ====================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- FOOTER SECTION 1 - CUSTOMIZE BUSINESS INFO -->
+                <div class="footer-section">
+                    <h3>About Rhiannon</h3>
+                    <p>Learn about the passion that has fueled my journey for all things hair & beauty for over 20 years, and what I can offer to you for that look & style that you've been wanting!</p>
+                    <div class="social-links">
+                        <!-- ADD YOUR SOCIAL MEDIA LINKS -->
+                        <a href="https://www.instagram.com/hairbyrhiannon82/" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- FOOTER SECTION 2 - QUICK LINKS -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="services.html">Services & Pricing</a></li>
+                        <li><a href="portfolio.html">Portfolio</a></li>
+                        <li><a href="policies.html">Policies</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- FOOTER SECTION 3 - BLOG PLACEHOLDER -->
+                <div class="footer-section">
+                    <h3>Recent Blog</h3>
+                    <!-- FUTURE: Add blog content here -->
+                </div>
+
+                <!-- FOOTER SECTION 4 - CONTACT INFO -->
+                <div class="footer-section">
+                    <h3>Have Questions?</h3>
+                    <!-- CUSTOMIZE CONTACT INFORMATION -->
+                    <p><i class="fas fa-map-marker-alt"></i> 611 N Main St, North Canton, OH 44720</p>
+                    <p><i class="fas fa-phone"></i> +1 330 309 3788</p>
+                    <p><i class="fas fa-envelope"></i> Rhiannon@hairbyrhi.com</p>
+                </div>
+            </div>
+
+            <!-- FOOTER BOTTOM - COPYRIGHT INFO -->
+            <div class="footer-bottom">
+                <!-- CUSTOMIZE COPYRIGHT YEAR AND ATTRIBUTION -->
+                <p>&copy; 2025 Hair By Rhiannon. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ======================
+         JAVASCRIPT
+         ====================== -->
+    <script src="js/main.js"></script>
+</body>
+</html>
