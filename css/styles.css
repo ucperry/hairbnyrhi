@@ -709,7 +709,19 @@ body {
     }
 
     .nav-menu {
-        display: none; /* Will be replaced with mobile menu */
+        display: none;
+        flex-direction: column;
+        background: var(--white);
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        box-shadow: 0 2px 20px var(--shadow);
+        z-index: 999;
+    }
+
+    .nav-menu.d-block {
+        display: flex;
     }
 
     .mobile-toggle {

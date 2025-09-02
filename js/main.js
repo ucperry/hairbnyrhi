@@ -38,11 +38,10 @@ function initializeNavigation() {
         }
     });
     
-    // Mobile menu toggle (placeholder for future mobile menu implementation)
-    if (mobileToggle) {
+    // Mobile menu toggle
+    if (mobileToggle && navMenu) {
         mobileToggle.addEventListener('click', function() {
-            console.log('Mobile menu toggle clicked - implement mobile menu functionality');
-            // Future: Toggle mobile menu visibility
+            navMenu.classList.toggle('d-block');
         });
     }
     
