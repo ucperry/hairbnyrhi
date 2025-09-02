@@ -355,6 +355,45 @@ body {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-card input[type="checkbox"] {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    /* Optional: visually hide but keep accessible */
+    opacity: 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.service-card label {
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.service-card h4 {
+    margin: 0.5rem 0 0.25rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: inherit;
+    display: block;
+}
+
+.service-card .price {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    color: inherit;
+    display: block;
 }
 
 .service-card::before {
