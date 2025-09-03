@@ -1,4 +1,3 @@
-console.log('🔍 Loading app.js...');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -39,11 +38,11 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API Routes (we'll add these next)
+// API Routes
+app.use('/api/services', require('./routes/services'));
 // app.use('/api/auth', require('./routes/auth'));
 // app.use('/api/requests', require('./routes/requests'));
 // app.use('/api/admin', require('./routes/admin'));
-// app.use('/api/services', require('./routes/services'));
 
 // 404 handler
 app.use('*', (req, res) => {
