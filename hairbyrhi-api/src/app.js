@@ -41,7 +41,9 @@ app.get('/health', (req, res) => {
 // API Routes
 app.use('/api/services', require('./routes/services'));
 app.use('/api/requests', require('./routes/requests'));
-app.use('/api/admin', require('./routes/admin'));
+// Debug: Check what admin route exports
+console.log('Admin route export:', require('./routes/admin'));
+app.use('/api/admin', require('./routes/admin')); // UNCOMMENT this line
 // app.use('/api/auth', require('./routes/auth'));
 
 // 404 handler
