@@ -1,5 +1,11 @@
+console.log('🔍 Starting server.js...');
+
 const app = require('./src/app');
+console.log('✅ App loaded successfully');
+
 const { testConnection } = require('./config/database');
+console.log('✅ Database config loaded successfully');
+
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3000;
@@ -7,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 // Test database connection before starting server
 const startServer = async () => {
   try {
+    console.log('🔄 Testing database connection...');
     await testConnection();
     
     app.listen(PORT, () => {
