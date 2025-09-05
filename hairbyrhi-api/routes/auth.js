@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
-const pool = require('../config/database'); // Your existing database connection
+const { pool } = require('../config/database'); // Your existing database connection
 
 const router = express.Router();
 

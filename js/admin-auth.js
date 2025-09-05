@@ -170,7 +170,7 @@ class AdminLogin {
         
         try {
             // Make API call to your authentication endpoint
-            const response = await fetch('/api/auth/login', {
+            const response = await fetch('http://localhost:3000/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -255,7 +255,7 @@ const AuthUtils = {
         if (!token) return false;
 
         try {
-            const response = await fetch('/api/auth/verify', {
+            const response = await fetch('http://localhost:3000/api/auth/verify', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`

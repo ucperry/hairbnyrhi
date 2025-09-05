@@ -9,10 +9,15 @@ const app = express();
 app.use(helmet());
 // CORS configuration
 app.use(cors({
-origin: process.env.NODE_ENV === 'production'
-? ['https://yourdomain.com'] // Replace with actual frontend domain
-: ['http://localhost:3000', 'http://localhost:3001'], // Allow local development
-credentials: true
+    origin: process.env.NODE_ENV === 'production'
+        ? ['https://yourdomain.com'] // Replace with actual frontend domain
+        : [
+            'http://localhost:3000', 
+            'http://localhost:3001',
+            'http://127.0.0.1:5500',    // Live Server
+            'http://localhost:5500'     // Live Server alternative
+        ],
+    credentials: true
 }));
 
 // Rate limiting
@@ -27,8 +32,8 @@ app.use('/api/', limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// ADD THIS LINE - Static file serving
-app.use(express.static('./'));
+// Static file serving - CORRECTED PATH
+//app.use(express.static('../../'));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
