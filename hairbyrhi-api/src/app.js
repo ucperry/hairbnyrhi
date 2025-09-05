@@ -73,18 +73,24 @@ app.get('/api/export', async (req, res) => {
 });
 
 // API Routes
+console.log('🔍 Loading all routes...');
 app.use('/api/services', require('./routes/services'));
 app.use('/api/requests', require('./routes/requests'));
 app.use('/api/admin', require('./routes/admin'));
+
+console.log('🔍 Mounting auth routes...');
 app.use('/api/auth', authRoutes);
-console.log('✅ Admin routes loaded successfully');
+console.log('✅ Auth routes mounted successfully');
+console.log('✅ All routes loaded successfully');
+
 // app.use('/api/auth', require('./routes/auth'));
+
 // 404 handler
 app.use('*', (req, res) => {
-res.status(404).json({
-error: 'Endpoint not found',
-message: `Cannot ${req.method} ${req.originalUrl}`
- });
+    res.status(404).json({
+        error: 'Endpoint not found',
+        message: `Cannot ${req.method} ${req.originalUrl}`
+    });
 });
 // Global error handler
 app.use((error, req, res, next) => {

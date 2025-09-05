@@ -2,8 +2,8 @@
 // Add these imports at the top and protect your routes
 
 const express = require('express');
-const { pool } = require('../config/database');
-const { protectAdminRoute, authenticateToken, requireAdmin } = require('../middleware/auth');
+const { pool } = require('../../config/database');
+const { protectAdminRoute, authenticateToken, requireAdmin } = require('../../middleware/auth');
 
 const router = express.Router();
 
@@ -389,5 +389,8 @@ router.delete('/requests/:id', protectAdminRoute(), async (req, res) => {
  * @access  Protected - Super Admin only
  */
 
+
+// Temporary debug - add this before module.exports
+console.log('🔍 Auth routes registered:', router.stack.map(layer => `${layer.route?.stack[0]?.method?.toUpperCase()} ${layer.route?.path}`));
 
 module.exports = router;
