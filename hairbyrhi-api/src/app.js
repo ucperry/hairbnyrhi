@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const authRoutes = require('../routes/auth');
 require('dotenv').config();
 const app = express();
 // Security middleware
@@ -67,6 +68,7 @@ app.get('/api/export', async (req, res) => {
 app.use('/api/services', require('./routes/services'));
 app.use('/api/requests', require('./routes/requests'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/auth', authRoutes);
 console.log('✅ Admin routes loaded successfully');
 // app.use('/api/auth', require('./routes/auth'));
 // 404 handler
