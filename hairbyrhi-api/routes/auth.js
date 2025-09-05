@@ -1,547 +1,393 @@
-// routes/auth.js
+// Update your existing routes/admin.js file
+// Add these imports at the top and protect your routes
+
 const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const rateLimit = require('express-rate-limit');
-const { body, validationResult } = require('express-validator');
-const { pool } = require('../config/database'); // Your existing database connection
+const { pool } = require('../config/database');
+const { protectAdminRoute, authenticateToken, requireAdmin } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Rate limiting for authentication endpoints
-const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // 5 attempts per window
-    message: {
-        error: 'Too many login attempts, please try again in 15 minutes',
-        code: 'RATE_LIMIT_EXCEEDED'
-    },
-    standardHeaders: true,
-    legacyHeaders: false,
-});
-
-// Validation middleware
-const loginValidation = [
-    body('email')
-        .isEmail()
-        .normalizeEmail()
-        .withMessage('Valid email address is required'),
-    body('password')
-        .isLength({ min: 6 })
-        .withMessage('Password must be at least 6 characters long'),
-    body('rememberMe')
-        .optional()
-        .isBoolean()
-        .withMessage('Remember me must be a boolean value')
-];
-
-const passwordResetValidation = [
-    body('email')
-        .isEmail()
-        .normalizeEmail()
-        .withMessage('Valid email address is required')
-];
-
-const changePasswordValidation = [
-    body('currentPassword')
-        .notEmpty()
-        .withMessage('Current password is required'),
-    body('newPassword')
-        .isLength({ min: 6 })
-        .withMessage('New password must be at least 6 characters long'),
-    body('confirmPassword')
-        .custom((value, { req }) => {
-            if (value !== req.body.newPassword) {
-                throw new Error('Password confirmation does not match');
-            }
-            return true;
-        })
-];
-
-// Helper function to generate JWT token
-const generateToken = (user, rememberMe = false) => {
-    const payload = {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        firstName: user.first_name,
-        lastName: user.last_name
-    };
-
-    const options = {
-        expiresIn: rememberMe ? '30d' : '24h',
-        issuer: 'hairbyrhi-api',
-        audience: 'hairbyrhi-admin'
-    };
-
-    return jwt.sign(payload, process.env.JWT_SECRET, options);
-};
-
-// Helper function to hash password
-const hashPassword = async (password) => {
-    const saltRounds = 12;
-    return await bcrypt.hash(password, saltRounds);
-};
-
 /**
- * @route   POST /api/auth/login
- * @desc    Authenticate admin user and return JWT token
- * @access  Public (with rate limiting)
+ * @route   GET /api/admin/requests
+ * @desc    Get all appointment requests with filtering
+ * @access  Protected - Admin only
  */
-router.post('/login', authLimiter, loginValidation, async (req, res) => {
+router.get('/requests', protectAdminRoute(), async (req, res) => {
     try {
-        // Check for validation errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid input data',
-                errors: errors.array()
-            });
-        }
+        // Log the authenticated user
+        console.log(`Admin requests accessed by: ${req.user.fullName} (${req.user.email})`);
 
-        const { email, password, rememberMe = false } = req.body;
-
-        // Query user from database
-        const userQuery = `
+        const { status, limit = 50, offset = 0 } = req.query;
+        
+        // Build query with optional status filter
+        let query = `
             SELECT 
-                id, 
-                email, 
-                password_hash, 
-                first_name, 
-                last_name, 
-                role, 
-                is_active, 
-                last_login_at,
-                failed_login_attempts,
-                locked_until
-            FROM admin_users 
-            WHERE email = $1 AND is_active = true
+                ar.id,
+                ar.customer_id,
+                ar.service_id,
+                ar.customer_notes,
+                ar.admin_notes,
+                ar.status,
+                ar.created_at,
+                ar.updated_at,
+                c.first_name,
+                c.last_name,
+                c.email,
+                c.phone,
+                s.name as service_name,
+                s.price as service_price,
+                s.duration as service_duration,
+                -- Get preferred times
+                array_agg(
+                    json_build_object(
+                        'preferred_time', rtp.preferred_time,
+                        'priority', rtp.priority
+                    ) ORDER BY rtp.priority
+                ) as preferred_times
+            FROM appointment_requests ar
+            JOIN customers c ON ar.customer_id = c.id
+            JOIN services s ON ar.service_id = s.id
+            LEFT JOIN request_time_preferences rtp ON ar.id = rtp.request_id
         `;
 
-        const userResult = await pool.query(userQuery, [email]);
-
-        if (userResult.rows.length === 0) {
-            // Log failed login attempt
-            console.log(`Failed login attempt for non-existent user: ${email}`);
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid email or password',
-                code: 'INVALID_CREDENTIALS'
-            });
+        const queryParams = [];
+        
+        if (status) {
+            query += ` WHERE ar.status = $${queryParams.length + 1}`;
+            queryParams.push(status);
         }
 
-        const user = userResult.rows[0];
+        query += `
+            GROUP BY ar.id, c.id, s.id
+            ORDER BY ar.created_at DESC
+            LIMIT $${queryParams.length + 1}
+            OFFSET $${queryParams.length + 2}
+        `;
 
-        // Check if account is locked
-        if (user.locked_until && new Date() < new Date(user.locked_until)) {
-            const lockTimeRemaining = Math.ceil((new Date(user.locked_until) - new Date()) / (1000 * 60));
-            return res.status(423).json({
-                success: false,
-                message: `Account is locked. Try again in ${lockTimeRemaining} minutes.`,
-                code: 'ACCOUNT_LOCKED'
-            });
+        queryParams.push(limit, offset);
+
+        const result = await pool.query(query, queryParams);
+
+        // Get total count for pagination
+        let countQuery = 'SELECT COUNT(*) FROM appointment_requests ar';
+        let countParams = [];
+        
+        if (status) {
+            countQuery += ' WHERE ar.status = $1';
+            countParams.push(status);
         }
 
-        // Verify password
-        const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+        const countResult = await pool.query(countQuery, countParams);
+        const totalCount = parseInt(countResult.rows[0].count);
 
-        if (!isPasswordValid) {
-            // Increment failed login attempts
-            const failedAttempts = (user.failed_login_attempts || 0) + 1;
-            let lockUntil = null;
-
-            // Lock account after 5 failed attempts for 30 minutes
-            if (failedAttempts >= 5) {
-                lockUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
-            }
-
-            await pool.query(`
-                UPDATE admin_users 
-                SET 
-                    failed_login_attempts = $1,
-                    locked_until = $2
-                WHERE id = $3
-            `, [failedAttempts, lockUntil, user.id]);
-
-            console.log(`Failed login attempt for user: ${email}, attempts: ${failedAttempts}`);
-
-            return res.status(401).json({
-                success: false,
-                message: lockUntil ? 
-                    'Too many failed attempts. Account locked for 30 minutes.' : 
-                    'Invalid email or password',
-                code: 'INVALID_CREDENTIALS'
-            });
-        }
-
-        // Successful login - reset failed attempts and update last login
-        await pool.query(`
-            UPDATE admin_users 
-            SET 
-                failed_login_attempts = 0,
-                locked_until = NULL,
-                last_login_at = CURRENT_TIMESTAMP
-            WHERE id = $1
-        `, [user.id]);
-
-        // Generate JWT token
-        const token = generateToken(user, rememberMe);
-
-        // Log successful login
-        console.log(`Successful login for user: ${email}`);
-
-        // Return success response
         res.json({
             success: true,
-            message: 'Login successful',
             data: {
-                token,
-                user: {
-                    id: user.id,
-                    email: user.email,
-                    firstName: user.first_name,
-                    lastName: user.last_name,
-                    role: user.role,
-                    lastLogin: user.last_login_at
+                requests: result.rows,
+                pagination: {
+                    total: totalCount,
+                    limit: parseInt(limit),
+                    offset: parseInt(offset),
+                    hasMore: parseInt(offset) + parseInt(limit) < totalCount
                 },
-                expiresIn: rememberMe ? '30d' : '24h'
-            }
-        });
-
-    } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error during login',
-            code: 'INTERNAL_ERROR'
-        });
-    }
-});
-
-/**
- * @route   POST /api/auth/logout
- * @desc    Logout user (client-side token invalidation)
- * @access  Private
- */
-router.post('/logout', async (req, res) => {
-    try {
-        // Extract token from header
-        const authHeader = req.headers.authorization;
-        const token = authHeader && authHeader.split(' ')[1];
-
-        if (token) {
-            // In a production environment, you might want to maintain a blacklist
-            // of invalidated tokens or use a token store like Redis
-            console.log('User logged out successfully');
-        }
-
-        res.json({
-            success: true,
-            message: 'Logout successful'
-        });
-
-    } catch (error) {
-        console.error('Logout error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error during logout'
-        });
-    }
-});
-
-/**
- * @route   GET /api/auth/verify
- * @desc    Verify JWT token and return user data
- * @access  Private
- */
-router.get('/verify', async (req, res) => {
-    try {
-        const authHeader = req.headers.authorization;
-        const token = authHeader && authHeader.split(' ')[1];
-
-        if (!token) {
-            return res.status(401).json({
-                success: false,
-                message: 'Access token is required',
-                code: 'TOKEN_REQUIRED'
-            });
-        }
-
-        // Verify token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        // Get fresh user data from database
-        const userQuery = `
-            SELECT 
-                id, 
-                email, 
-                first_name, 
-                last_name, 
-                role, 
-                is_active,
-                last_login_at
-            FROM admin_users 
-            WHERE id = $1 AND is_active = true
-        `;
-
-        const userResult = await pool.query(userQuery, [decoded.id]);
-
-        if (userResult.rows.length === 0) {
-            return res.status(401).json({
-                success: false,
-                message: 'User not found or inactive',
-                code: 'USER_NOT_FOUND'
-            });
-        }
-
-        const user = userResult.rows[0];
-
-        res.json({
-            success: true,
-            message: 'Token is valid',
-            data: {
-                user: {
-                    id: user.id,
-                    email: user.email,
-                    firstName: user.first_name,
-                    lastName: user.last_name,
-                    role: user.role,
-                    lastLogin: user.last_login_at
-                },
-                tokenExp: decoded.exp
-            }
-        });
-
-    } catch (error) {
-        if (error.name === 'JsonWebTokenError') {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid token',
-                code: 'INVALID_TOKEN'
-            });
-        }
-
-        if (error.name === 'TokenExpiredError') {
-            return res.status(401).json({
-                success: false,
-                message: 'Token has expired',
-                code: 'TOKEN_EXPIRED'
-            });
-        }
-
-        console.error('Token verification error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error during token verification'
-        });
-    }
-});
-
-/**
- * @route   POST /api/auth/change-password
- * @desc    Change user password
- * @access  Private
- */
-router.post('/change-password', changePasswordValidation, async (req, res) => {
-    try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid input data',
-                errors: errors.array()
-            });
-        }
-
-        const authHeader = req.headers.authorization;
-        const token = authHeader && authHeader.split(' ')[1];
-
-        if (!token) {
-            return res.status(401).json({
-                success: false,
-                message: 'Access token is required'
-            });
-        }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const { currentPassword, newPassword } = req.body;
-
-        // Get current user data
-        const userQuery = `
-            SELECT id, password_hash 
-            FROM admin_users 
-            WHERE id = $1 AND is_active = true
-        `;
-
-        const userResult = await pool.query(userQuery, [decoded.id]);
-
-        if (userResult.rows.length === 0) {
-            return res.status(401).json({
-                success: false,
-                message: 'User not found'
-            });
-        }
-
-        const user = userResult.rows[0];
-
-        // Verify current password
-        const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password_hash);
-
-        if (!isCurrentPasswordValid) {
-            return res.status(400).json({
-                success: false,
-                message: 'Current password is incorrect'
-            });
-        }
-
-        // Hash new password
-        const newPasswordHash = await hashPassword(newPassword);
-
-        // Update password in database
-        await pool.query(`
-            UPDATE admin_users 
-            SET 
-                password_hash = $1,
-                password_changed_at = CURRENT_TIMESTAMP
-            WHERE id = $2
-        `, [newPasswordHash, decoded.id]);
-
-        console.log(`Password changed for user ID: ${decoded.id}`);
-
-        res.json({
-            success: true,
-            message: 'Password changed successfully'
-        });
-
-    } catch (error) {
-        console.error('Change password error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error'
-        });
-    }
-});
-
-/**
- * @route   POST /api/auth/forgot-password
- * @desc    Request password reset (placeholder for email integration)
- * @access  Public
- */
-router.post('/forgot-password', authLimiter, passwordResetValidation, async (req, res) => {
-    try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid input data',
-                errors: errors.array()
-            });
-        }
-
-        const { email } = req.body;
-
-        // Check if user exists
-        const userQuery = `
-            SELECT id, email, first_name, last_name
-            FROM admin_users 
-            WHERE email = $1 AND is_active = true
-        `;
-
-        const userResult = await pool.query(userQuery, [email]);
-
-        // Always return success for security (don't reveal if email exists)
-        res.json({
-            success: true,
-            message: 'If an account with that email exists, password reset instructions have been sent.'
-        });
-
-        // If user exists, log the request (in production, send email)
-        if (userResult.rows.length > 0) {
-            console.log(`Password reset requested for: ${email}`);
-            
-            // TODO: Implement email sending functionality
-            // - Generate secure reset token
-            // - Store token with expiration in database
-            // - Send email with reset link
-        }
-
-    } catch (error) {
-        console.error('Forgot password error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error'
-        });
-    }
-});
-
-/**
- * @route   GET /api/auth/profile
- * @desc    Get current user profile
- * @access  Private
- */
-router.get('/profile', async (req, res) => {
-    try {
-        const authHeader = req.headers.authorization;
-        const token = authHeader && authHeader.split(' ')[1];
-
-        if (!token) {
-            return res.status(401).json({
-                success: false,
-                message: 'Access token is required'
-            });
-        }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        const userQuery = `
-            SELECT 
-                id, 
-                email, 
-                first_name, 
-                last_name, 
-                role, 
-                created_at,
-                last_login_at,
-                password_changed_at
-            FROM admin_users 
-            WHERE id = $1 AND is_active = true
-        `;
-
-        const userResult = await pool.query(userQuery, [decoded.id]);
-
-        if (userResult.rows.length === 0) {
-            return res.status(401).json({
-                success: false,
-                message: 'User not found'
-            });
-        }
-
-        const user = userResult.rows[0];
-
-        res.json({
-            success: true,
-            data: {
-                user: {
-                    id: user.id,
-                    email: user.email,
-                    firstName: user.first_name,
-                    lastName: user.last_name,
-                    role: user.role,
-                    createdAt: user.created_at,
-                    lastLogin: user.last_login_at,
-                    passwordChangedAt: user.password_changed_at
+                authenticatedUser: {
+                    name: req.user.fullName,
+                    email: req.user.email,
+                    role: req.user.role
                 }
             }
         });
 
     } catch (error) {
-        console.error('Get profile error:', error);
+        console.error('Error fetching admin requests:', error);
         res.status(500).json({
             success: false,
-            message: 'Internal server error'
+            message: 'Failed to fetch appointment requests',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 });
+
+/**
+ * @route   GET /api/admin/dashboard
+ * @desc    Get dashboard statistics and summary
+ * @access  Protected - Admin only
+ */
+router.get('/dashboard', protectAdminRoute(), async (req, res) => {
+    try {
+        console.log(`Dashboard accessed by: ${req.user.fullName} (${req.user.email})`);
+
+        // Get various statistics in parallel
+        const [
+            pendingRequestsResult,
+            totalRequestsResult,
+            totalCustomersResult,
+            recentRequestsResult,
+            servicesResult
+        ] = await Promise.all([
+            pool.query("SELECT COUNT(*) FROM appointment_requests WHERE status = 'pending'"),
+            pool.query("SELECT COUNT(*) FROM appointment_requests"),
+            pool.query("SELECT COUNT(*) FROM customers"),
+            pool.query(`
+                SELECT 
+                    ar.id,
+                    ar.status,
+                    ar.created_at,
+                    c.first_name,
+                    c.last_name,
+                    s.name as service_name
+                FROM appointment_requests ar
+                JOIN customers c ON ar.customer_id = c.id
+                JOIN services s ON ar.service_id = s.id
+                ORDER BY ar.created_at DESC
+                LIMIT 5
+            `),
+            pool.query("SELECT COUNT(*) as count, s.name FROM appointment_requests ar JOIN services s ON ar.service_id = s.id GROUP BY s.name ORDER BY count DESC LIMIT 5")
+        ]);
+
+        const stats = {
+            pendingRequests: parseInt(pendingRequestsResult.rows[0].count),
+            totalRequests: parseInt(totalRequestsResult.rows[0].count),
+            totalCustomers: parseInt(totalCustomersResult.rows[0].count),
+            recentRequests: recentRequestsResult.rows,
+            popularServices: servicesResult.rows
+        };
+
+        res.json({
+            success: true,
+            data: {
+                stats,
+                user: {
+                    name: req.user.fullName,
+                    email: req.user.email,
+                    role: req.user.role,
+                    welcomeMessage: `Welcome back, ${req.user.firstName}!`
+                },
+                lastUpdated: new Date().toISOString()
+            }
+        });
+
+    } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch dashboard data',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
+/**
+ * @route   PUT /api/admin/requests/:id/approve
+ * @desc    Approve an appointment request and create confirmed appointment
+ * @access  Protected - Admin only
+ */
+router.put('/requests/:id/approve', protectAdminRoute(), async (req, res) => {
+    const requestId = req.params.id;
+    const { preferredTimeId, adminNotes } = req.body;
+
+    try {
+        console.log(`Request ${requestId} approval attempted by: ${req.user.fullName}`);
+
+        // Start transaction
+        await pool.query('BEGIN');
+
+        // Get the request details and preferred time
+        const requestQuery = `
+            SELECT 
+                ar.*,
+                rtp.preferred_time
+            FROM appointment_requests ar
+            LEFT JOIN request_time_preferences rtp ON ar.id = rtp.request_id
+            WHERE ar.id = $1 AND rtp.id = $2
+        `;
+
+        const requestResult = await pool.query(requestQuery, [requestId, preferredTimeId]);
+
+        if (requestResult.rows.length === 0) {
+            await pool.query('ROLLBACK');
+            return res.status(404).json({
+                success: false,
+                message: 'Request or preferred time not found'
+            });
+        }
+
+        const request = requestResult.rows[0];
+
+        if (request.status !== 'pending') {
+            await pool.query('ROLLBACK');
+            return res.status(400).json({
+                success: false,
+                message: 'Only pending requests can be approved'
+            });
+        }
+
+        // Create confirmed appointment
+        const appointmentQuery = `
+            INSERT INTO appointments (
+                customer_id,
+                service_id,
+                scheduled_time,
+                status,
+                notes,
+                created_by,
+                created_at
+            ) VALUES ($1, $2, $3, 'scheduled', $4, $5, CURRENT_TIMESTAMP)
+            RETURNING id
+        `;
+
+        const appointmentResult = await pool.query(appointmentQuery, [
+            request.customer_id,
+            request.service_id,
+            request.preferred_time,
+            adminNotes || 'Approved via admin panel',
+            req.user.id
+        ]);
+
+        // Update request status
+        await pool.query(`
+            UPDATE appointment_requests 
+            SET 
+                status = 'confirmed',
+                admin_notes = $1,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = $2
+        `, [adminNotes || `Approved by ${req.user.fullName}`, requestId]);
+
+        await pool.query('COMMIT');
+
+        res.json({
+            success: true,
+            message: 'Request approved and appointment created successfully',
+            data: {
+                appointmentId: appointmentResult.rows[0].id,
+                approvedBy: req.user.fullName,
+                approvedAt: new Date().toISOString()
+            }
+        });
+
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error('Error approving request:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to approve request',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
+/**
+ * @route   PUT /api/admin/requests/:id/reschedule
+ * @desc    Suggest alternative time for appointment request
+ * @access  Protected - Admin only
+ */
+router.put('/requests/:id/reschedule', protectAdminRoute(), async (req, res) => {
+    const requestId = req.params.id;
+    const { suggestedTime, adminNotes } = req.body;
+
+    try {
+        console.log(`Request ${requestId} reschedule by: ${req.user.fullName}`);
+
+        const updateQuery = `
+            UPDATE appointment_requests 
+            SET 
+                status = 'rescheduled',
+                admin_notes = $1,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = $2 AND status = 'pending'
+            RETURNING *
+        `;
+
+        const result = await pool.query(updateQuery, [
+            `${adminNotes} - Suggested time: ${suggestedTime} (by ${req.user.fullName})`,
+            requestId
+        ]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Request not found or not in pending status'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Reschedule suggestion sent successfully',
+            data: {
+                request: result.rows[0],
+                rescheduledBy: req.user.fullName,
+                suggestedTime
+            }
+        });
+
+    } catch (error) {
+        console.error('Error rescheduling request:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to reschedule request'
+        });
+    }
+});
+
+/**
+ * @route   DELETE /api/admin/requests/:id
+ * @desc    Cancel/reject an appointment request
+ * @access  Protected - Admin only
+ */
+router.delete('/requests/:id', protectAdminRoute(), async (req, res) => {
+    const requestId = req.params.id;
+    const { reason } = req.body;
+
+    try {
+        console.log(`Request ${requestId} cancellation by: ${req.user.fullName}`);
+
+        const updateQuery = `
+            UPDATE appointment_requests 
+            SET 
+                status = 'cancelled',
+                admin_notes = $1,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = $2
+            RETURNING *
+        `;
+
+        const result = await pool.query(updateQuery, [
+            `Cancelled by ${req.user.fullName}. Reason: ${reason || 'No reason provided'}`,
+            requestId
+        ]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Request not found'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Request cancelled successfully',
+            data: {
+                request: result.rows[0],
+                cancelledBy: req.user.fullName,
+                reason: reason || 'No reason provided'
+            }
+        });
+
+    } catch (error) {
+        console.error('Error cancelling request:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to cancel request'
+        });
+    }
+});
+
+/**
+ * @route   GET /api/admin/users
+ * @desc    Get all admin users (super admin only)
+ * @access  Protected - Super Admin only
+ */
+
 
 module.exports = router;
