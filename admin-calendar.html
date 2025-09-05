@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar - Hair By Rhiannon Admin</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <style>
+        :root {
+            --calendar-bg: #fafafa;
+            --calendar-border: #e0e0e0;
+            --appointment-cut: #d4af37;
+            --appointment-color: #d4a574;
+            --appointment-treatment: #28a745;
+            --appointment-combo: #17a2b8;
+            --time-marker: #666;
+        }
+
+        .admin-header {
+            background: var(--white);
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--calendar-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin: 0;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary-light);
+            border-radius: 25px;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+
+        .logout-btn {
+            background: var(--danger-red);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .date-navigation {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: var(--primary-gold);
+            color: var(--white);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #b8941f;
+            transform: scale(1.1);
+        }
+
+        .current-date {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .view-toggles {
+            display: flex;
+            background: var(--calendar-bg);
+            border-radius: 25px;
+            padding: 0.25rem;
+            border: 1px solid var(--calendar-border);
+        }
+
+        .view-btn {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-medium);
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active {
+            background: var(--primary-gold);
+            color: var(--white);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .quick-btn {
+            background: var(--white);
+            border: 2px solid var(--primary-gold);
+            color: var(--primary-gold);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-btn:hover {
+            background: var(--primary-gold);
+            color: var(--white);
+        }
+
+        .calendar-main {
+            padding: 2rem 0;
+            background: var(--calendar-bg);
+            min-height: calc(100vh - 200px);
+        }
+
+        .calendar-container {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--shadow);
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calendar-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .calendar-stats {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--primary-gold);
+        }
+
+        .timeline-view {
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            min-height: 600px;
+        }
+
+        .time-labels {
+            background: var(--primary-light);
+            border-right: 1px solid var(--calendar-border);
+        }
+
+        .time-slot {
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--calendar-border);
+            font-size: 0.8rem;
+            color: var(--time-marker);
+            text-align: center;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .appointment-area {
+            position: relative;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 59px,
+                var(--calendar-border) 59px,
+                var(--calendar-border) 60px
+            );
+        }
+
+        .appointment-block {
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: var(--white);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .appointment-block:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border-color: var(--white);
+        }
+
+        .appointment-block.cut-style {
+            background: linear-gradient(135deg, var(--appointment-cut), #c19b2e);
+        }
+
+        .appointment-block.color {
+            background: linear-gradient(135deg, var(--appointment-color), #b8946a);
+        }
+
+        .appointment-block.treatment {
+            background: linear-gradient(135deg, var(--appointment-treatment), #218838);
+        }
+
+        .appointment-block.combo {
+            background: linear-gradient(135deg, var(--appointment-combo), #138496);
+        }
+
+        .appointment-time {
+            font-weight: 600;
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .appointment-service {
+            font-weight: 500;
+            margin: 0.25rem 0;
+        }
+
+        .appointment-client {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .empty-day {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-day i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-gold);
+        }
+
+        .legend {
+            padding: 1.5rem 2rem;
+            background: var(--primary-light);
+            border-top: 1px solid var(--calendar-border);
+        }
+
+        .legend-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+
+        .legend-items {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .floating-add {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gold);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .floating-add:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .calendar-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .date-navigation {
+                justify-content: center;
+            }
+
+            .view-toggles,
+            .quick-actions {
+                justify-content: center;
+            }
+
+            .calendar-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .time-grid {
+                grid-template-columns: 60px 1fr;
+            }
+
+            .legend-items {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="container">
+            <div class="admin-nav">
+                <h1 class="admin-title">
+                    <i class="fas fa-calendar-alt" style="color: var(--primary-gold); margin-right: 0.5rem;"></i>
+                    Calendar Dashboard
+                </h1>
+                <div class="admin-actions">
+                    <div class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="currentUser">Rhiannon</span>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+
+            <div class="calendar-controls">
+                <div class="date-navigation">
+                    <button class="nav-btn" onclick="previousDay()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="current-date" id="currentDate">
+                        Monday, September 5, 2025
+                    </div>
+                    <button class="nav-btn" onclick="nextDay()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="view-toggles">
+                    <button class="view-btn active" onclick="switchView('day')">Day</button>
+                    <button class="view-btn" onclick="switchView('week')">Week</button>
+                    <button class="view-btn" onclick="switchView('month')">Month</button>
+                </div>
+
+                <div class="quick-actions">
+                    <a href="admin-dashboard.html" class="quick-btn">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <button class="quick-btn" onclick="refreshCalendar()">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Calendar Main Content -->
+    <main class="calendar-main">
+        <div class="container">
+            <div class="calendar-container">
+                <!-- Calendar Header with Stats -->
+                <div class="calendar-header">
+                    <h2 class="calendar-title" id="calendarTitle">Today's Schedule</h2>
+                    <div class="calendar-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-users"></i>
+                            <span class="stat-value" id="todayClients">0</span>
+                            <span>Clients</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <span class="stat-value" id="todayHours">0h</span>
+                            <span>Booked</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span class="stat-value" id="todayRevenue">$0</span>
+                            <span>Revenue</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline View -->
+                <div class="timeline-view" id="timelineView">
+                    <div class="time-grid">
+                        <!-- Time Labels Column -->
+                        <div class="time-labels" id="timeLabels">
+                            <!-- Generated by JavaScript -->
+                        </div>
+
+                        <!-- Appointments Area -->
+                        <div class="appointment-area" id="appointmentArea">
+                            <!-- Sample appointments - will be loaded from API -->
+                            <div class="appointment-block cut-style" style="top: 180px; height: 90px;">
+                                <div class="appointment-time">9:00 AM - 10:30 AM</div>
+                                <div class="appointment-service">Women's Cut & Style</div>
+                                <div class="appointment-client">Sarah Johnson</div>
+                            </div>
+
+                            <div class="appointment-block color" style="top: 360px; height: 180px;">
+                                <div class="appointment-time">12:00 PM - 3:00 PM</div>
+                                <div class="appointment-service">Full Color + Cut</div>
+                                <div class="appointment-client">Maria Garcia</div>
+                            </div>
+
+                            <div class="appointment-block treatment" style="top: 570px; height: 60px;">
+                                <div class="appointment-time">2:30 PM - 3:30 PM</div>
+                                <div class="appointment-service">Olaplex Treatment</div>
+                                <div class="appointment-client">Walk-in</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="empty-day" id="emptyDay" style="display: none;">
+                        <i class="fas fa-calendar-day"></i>
+                        <h3>No appointments scheduled</h3>
+                        <p>This day is wide open for walk-ins or personal time!</p>
+                    </div>
+                </div>
+
+                <!-- Service Legend -->
+                <div class="legend">
+                    <div class="legend-title">Service Types</div>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: var(--appointment-cut);"></div>
+                            <span>Cuts & Styling</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: var(--appointment-color);"></div>
+                            <span>Color Services</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: var(--appointment-treatment);"></div>
+                            <span>Treatments</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: var(--appointment-combo);"></div>
+                            <span>Combination Services</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Add Button -->
+    <button class="floating-add" onclick="quickAdd()" title="Quick Add Appointment">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Include authentication -->
+    <script src="js/admin-auth.js"></script>
+    
+    <!-- Calendar JavaScript -->
+    <script>
+        let currentDate = new Date();
+        let currentView = 'day';
+
+        // Initialize calendar when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            initializeCalendar();
+            loadTodayAppointments();
+        });
+
+        function initializeCalendar() {
+            generateTimeLabels();
+            updateDateDisplay();
+            updateStats();
+        }
+
+        function generateTimeLabels() {
+            const timeLabels = document.getElementById('timeLabels');
+            timeLabels.innerHTML = '';
+
+            for (let hour = 8; hour <= 20; hour++) {
+                const timeSlot = document.createElement('div');
+                timeSlot.className = 'time-slot';
+                
+                const displayHour = hour > 12 ? hour - 12 : hour;
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                const displayTime = `${displayHour}:00 ${ampm}`;
+                
+                timeSlot.textContent = displayTime;
+                timeLabels.appendChild(timeSlot);
+            }
+        }
+
+        function updateDateDisplay() {
+            const dateElement = document.getElementById('currentDate');
+            const titleElement = document.getElementById('calendarTitle');
+            
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            
+            const formattedDate = currentDate.toLocaleDateString('en-US', options);
+            dateElement.textContent = formattedDate;
+            
+            if (currentView === 'day') {
+                const isToday = currentDate.toDateString() === new Date().toDateString();
+                titleElement.textContent = isToday ? "Today's Schedule" : `${formattedDate} Schedule`;
+            }
+        }
+
+        function previousDay() {
+            currentDate.setDate(currentDate.getDate() - 1);
+            updateDateDisplay();
+            loadDayAppointments();
+        }
+
+        function nextDay() {
+            currentDate.setDate(currentDate.getDate() + 1);
+            updateDateDisplay();
+            loadDayAppointments();
+        }
+
+        function switchView(view) {
+            currentView = view;
+            
+            // Update active button
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // For now, we'll focus on day view
+            if (view !== 'day') {
+                showNotification('Week and Month views coming soon!', 'info');
+                return;
+            }
+            
+            loadDayAppointments();
+        }
+
+        async function loadTodayAppointments() {
+            // Set current date to today
+            currentDate = new Date();
+            updateDateDisplay();
+            await loadDayAppointments();
+        }
+
+        async function loadDayAppointments() {
+            try {
+                const dateStr = currentDate.toISOString().split('T')[0];
+                
+                // Call your API endpoint
+                const response = await authenticatedFetch(`/api/admin/appointments?date=${dateStr}`);
+                
+                if (response.ok) {
+                    const appointments = await response.json();
+                    renderAppointments(appointments);
+                    updateStats(appointments);
+                } else {
+                    console.error('Failed to load appointments');
+                    renderAppointments([]); // Show empty state
+                }
+            } catch (error) {
+                console.error('Error loading appointments:', error);
+                renderAppointments([]); // Show empty state
+            }
+        }
+
+        function renderAppointments(appointments) {
+            const appointmentArea = document.getElementById('appointmentArea');
+            const emptyDay = document.getElementById('emptyDay');
+            
+            // Clear existing appointments
+            appointmentArea.innerHTML = '';
+            
+            if (appointments.length === 0) {
+                emptyDay.style.display = 'block';
+                return;
+            }
+            
+            emptyDay.style.display = 'none';
+            
+            appointments.forEach(appointment => {
+                const block = createAppointmentBlock(appointment);
+                appointmentArea.appendChild(block);
+            });
+        }
+
+        function createAppointmentBlock(appointment) {
+            const block = document.createElement('div');
+            block.className = `appointment-block ${getServiceClass(appointment.service_name)}`;
+            
+            // Calculate position based on time
+            const startTime = new Date(`1970-01-01T${appointment.start_time}`);
+            const endTime = new Date(`1970-01-01T${appointment.end_time}`);
+            
+            const startHour = startTime.getHours();
+            const startMinute = startTime.getMinutes();
+            const duration = (endTime - startTime) / (1000 * 60); // minutes
+            
+            // Position from 8 AM = 0px, each hour = 60px
+            const topPosition = ((startHour - 8) * 60) + (startMinute);
+            const height = (duration / 60) * 60; // Convert to pixels
+            
+            block.style.top = `${topPosition}px`;
+            block.style.height = `${height}px`;
+            
+            // Format time display
+            const timeDisplay = `${formatTime(startTime)} - ${formatTime(endTime)}`;
+            
+            block.innerHTML = `
+                <div class="appointment-time">${timeDisplay}</div>
+                <div class="appointment-service">${appointment.service_name}</div>
+                <div class="appointment-client">${appointment.customer_name}</div>
+            `;
+            
+            // Add click handler for appointment details
+            block.addEventListener('click', () => showAppointmentDetails(appointment));
+            
+            return block;
+        }
+
+        function getServiceClass(serviceName) {
+            const service = serviceName.toLowerCase();
+            
+            if (service.includes('cut') || service.includes('style')) {
+                return 'cut-style';
+            } else if (service.includes('color') || service.includes('highlight') || service.includes('balayage')) {
+                return 'color';
+            } else if (service.includes('treatment') || service.includes('olaplex') || service.includes('keratin')) {
+                return 'treatment';
+            } else if (service.includes('combo') || service.includes('package')) {
+                return 'combo';
+            }
+            
+            return 'cut-style'; // default
+        }
+
+        function formatTime(date) {
+            return date.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+
+        function updateStats(appointments = []) {
+            const clientsCount = appointments.length;
+            const totalMinutes = appointments.reduce((total, apt) => {
+                const start = new Date(`1970-01-01T${apt.start_time}`);
+                const end = new Date(`1970-01-01T${apt.end_time}`);
+                return total + ((end - start) / (1000 * 60));
+            }, 0);
+            
+            const totalRevenue = appointments.reduce((total, apt) => {
+                return total + (apt.price || 0);
+            }, 0);
+            
+            document.getElementById('todayClients').textContent = clientsCount;
+            document.getElementById('todayHours').textContent = `${Math.round(totalMinutes / 60)}h`;
+            document.getElementById('todayRevenue').textContent = `$${totalRevenue}`;
+        }
+
+        function showAppointmentDetails(appointment) {
+            // Show appointment details modal/popup
+            alert(`Appointment Details:\n\nClient: ${appointment.customer_name}\nService: ${appointment.service_name}\nTime: ${appointment.start_time} - ${appointment.end_time}\nPrice: $${appointment.price}`);
+        }
+
+        function refreshCalendar() {
+            loadDayAppointments();
+            showNotification('Calendar refreshed!', 'success');
+        }
+
+        function quickAdd() {
+            // For now, redirect to consultation page
+            // In the future, could open a quick booking modal
+            window.location.href = 'consultation.html';
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                performLogout();
+            }
+        }
+
+        // Notification system (reuse from main.js)
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-${getNotificationIcon(type)}"></i>
+                    <span>${message}</span>
+                    <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            // Add notification styles if they don't exist
+            if (!document.querySelector('#notification-styles')) {
+                const styles = document.createElement('style');
+                styles.id = 'notification-styles';
+                styles.textContent = `
+                    .notification {
+                        position: fixed;
+                        top: 100px;
+                        right: 20px;
+                        max-width: 400px;
+                        padding: 1rem;
+                        border-radius: 10px;
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                        z-index: 10000;
+                        animation: slideInRight 0.5s ease;
+                    }
+                    .notification-info { background: var(--info-blue); color: white; }
+                    .notification-success { background: var(--success-green); color: white; }
+                    .notification-error { background: var(--danger-red); color: white; }
+                    .notification-warning { background: var(--warning-orange); color: white; }
+                    .notification-content {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.75rem;
+                    }
+                    .notification-close {
+                        background: none;
+                        border: none;
+                        color: inherit;
+                        cursor: pointer;
+                        margin-left: auto;
+                        padding: 0.25rem;
+                    }
+                    @keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(styles);
+            }
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        function getNotificationIcon(type) {
+            switch (type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-circle';
+                case 'warning': return 'exclamation-triangle';
+                case 'info':
+                default: return 'info-circle';
+            }
+        }
+    </script>
+</body>
+</html>
