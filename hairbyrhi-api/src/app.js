@@ -27,6 +27,9 @@ app.use('/api/', limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+// ADD THIS LINE - Static file serving
+app.use(express.static('./'));
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
 res.status(200).json({

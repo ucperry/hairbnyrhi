@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Hair by Rhiannon</title>
+    
+    <!-- Your existing font links -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Your existing stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin-login.css">
+</head>
+<body class="admin-login-body">
+    <div class="login-container">
+        <div class="brand-header">
+            <h1 class="brand-logo">Hair by Rhiannon</h1>
+            <p class="brand-tagline">Professional Hair Care Excellence</p>
+            <div class="admin-badge">Admin Portal</div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <form id="loginForm" novalidate>
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-input" 
+                    placeholder="Enter your email address"
+                    required
+                    autocomplete="email"
+                >
+                <div class="error-message" id="emailError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="password-container">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <button type="button" class="password-toggle" id="passwordToggle">Show</button>
+                </div>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+
+            <div class="remember-forgot">
+                <label class="remember-me">
+                    <input type="checkbox" id="rememberMe" name="rememberMe">
+                    <span>Remember me</span>
+                </label>
+                <a href="#" class="forgot-password" id="forgotPasswordLink">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="login-button" id="loginButton">
+                <span class="loading-spinner" id="loadingSpinner"></span>
+                <span id="buttonText">Sign In</span>
+            </button>
+        </form>
+
+        <div class="back-to-site">
+            <a href="index.html">
+                <span>←</span>
+                <span>Back to Hair by Rhiannon</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Your admin authentication JavaScript -->
+    <script src="js/admin-auth.js"></script>
+</body>
+</html>

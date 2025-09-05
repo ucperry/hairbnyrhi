@@ -814,3 +814,11 @@ body {
 .d-inline { display: inline; }
 .d-inline-block { display: inline-block; }
 .d-flex { display: flex; }
+
+/* ======================
+   ADMIN LOGIN STYLES
+   Added for authentication system
+   ====================== */
+
+/* Import the admin login styles */
+@import url('admin-login.css');
